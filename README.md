@@ -1,25 +1,20 @@
-version: "3"
-
+version: '3'
 services:
-  retool:
-    image: tryretool/backend:latest
+  retool-backend:
+    image: tryretool/backend:3.24.2
+    environment:
+      - NODE_ENV=production
     ports:
       - "3000:3000"
+
+  retool-frontend:
+    image: tryretool/frontend:3.24.2
     depends_on:
-      - db
-    env_file:
-      - .env
-
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: retool
-      POSTGRES_PASSWORD: retool
-      POSTGRES_DB: retool
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      - retool-backend
     ports:
-      - "5432:5432"
+      - "3001:3001"
 
-volumes:
-  pgdata:
+  retool-db-connector:
+    image: tryretool/db-connector:3.24.2
+    ports:
+      - "3002:3002"
